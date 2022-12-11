@@ -1,8 +1,6 @@
-from email import message
-import random
+import random #per a fer els numeros aleatoris del username
 import socket
 import threading
-from tokenize import String
 
 #sv es el Localhost sempre
 
@@ -24,7 +22,6 @@ class Client:
         while True:
             try:
                 missatge = self.sc.recv(1024).decode('ascii')   #rebre del seu socket amb buffer 1024
-                #print(missatge)
                 if missatge == 'CLOSE':
                     print("Connexió tancada")
                     self.sc.close()
@@ -41,14 +38,12 @@ class Client:
 
     def enviar_missatge(self):
         while True:
-            #missatge = '{}: {}'.format(self.username, input(''))
             missatge = input()
-            if(missatge == self.bye):
+            if(missatge == self.bye):                       #si un usuari envia Bye, s'envia al socket un CLOSE per a desconnectar-se
                 print("\n Tancant conexió...")
                 self.sc.send('CLOSE'.encode('ascii'))
-                #self.sc.close()
                 quit()
-            else:
+            else:                                   #enviar missatge al sv
                 missatge_f = self.username+": "+missatge
                 self.sc.send(missatge_f.encode('ascii'))
 
@@ -64,3 +59,5 @@ receive_thread = threading.Thread(target=mysc.rebre_missatge)
 receive_thread.start()
 write_thread = threading.Thread(target=mysc.enviar_missatge)
 write_thread.start()
+
+#crea un Client a partir del username i posa en marxa dos threads, el de rebre i enviar missatges respectivament
